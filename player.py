@@ -20,10 +20,13 @@ class Player(pygame.sprite.Sprite):
         self.speed = 200
         # timers
         self.timers = {
-            'tool-use': Timer(350, self.use_tool)  # call use_tool after 350 ms
+            'tool-use': Timer(350, self.use_tool),  # call use_tool after 350 ms
+            'tool-switch': Timer(200)
         }
         # tool attributes
-        self.selected_tool = 'hoe'
+        self.tools = ['hoe', 'axe', 'water']
+        self.tool_index = 0
+        self.selected_tool = self.tools[self.tool_index]
 
     def use_tool(self):
         pass
@@ -76,6 +79,14 @@ class Player(pygame.sprite.Sprite):
                 self.timers.get('tool-use').activate()
                 self.direction = pygame.math.Vector2()
                 self.frame_index = 0
+
+            # change tool
+            if keys[pygame.K_q] and not self.timers['tool-switch'].active:
+                self.timers['tool-switch'].activate()
+                self.tool_index += 1
+                if self.tool_index >= len(self.tools):
+                    self.tool_index = 0
+                self.selected_tool = self.tools[self.tool_index]
 
     def get_status(self):
         d = None
