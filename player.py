@@ -8,9 +8,10 @@ class Player(pygame.sprite.Sprite):
         super().__init__(group)
         # import assets
         self.import_assets()
+        self.status = 'left_water'
+        self.frame_index = 0
         # general setup
-        self.image = pygame.Surface((32, 64))
-        self.image.fill('green')
+        self.image = self.animations[self.status][self.frame_index]
         self.rect = self.image.get_rect(center=pos)
         # movement attributes
         self.direction = pygame.math.Vector2()
