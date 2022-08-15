@@ -26,5 +26,5 @@ class Overlay:
 
         # seed
         seed_surface = self.seed_surfaces[self.player.selected_seed]
-        seed_rect = tool_surface.get_rect(midbottom=OVERLAY_POSITIONS['seed'])
+        seed_rect = seed_surface.get_rect(midbottom=OVERLAY_POSITIONS['seed'])
         self.display_surface.blit(seed_surface, seed_rect)
