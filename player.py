@@ -5,7 +5,7 @@ from timer import Timer
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, group):
+    def __init__(self, pos, group, collision_sprites):
         super().__init__(group)
         # import assets
         self.import_assets()
@@ -19,6 +19,9 @@ class Player(pygame.sprite.Sprite):
         self.direction = pygame.math.Vector2()
         self.pos = pygame.math.Vector2(self.rect.center)
         self.speed = 200
+        # collision
+        self.hitbox = self.rect.copy().inflate((-126, -70))  # shrink x by 126, shrink y by 70
+        self.collision_sprites = collision_sprites
         # timers
         self.timers = {
             'tool-use': Timer(350, self.use_tool),  # call use_tool after 350 ms
@@ -125,17 +128,39 @@ class Player(pygame.sprite.Sprite):
         for timer in self.timers.values():
             timer.update()
 
+    def collision(self, direction):
+        for sprite in self.collision_sprites.sprites():
+            if hasattr(sprite, 'hitbox'):
+                if sprite.hitbox.colliderect(self.hitbox):
+                    if direction == 'horizontal':
+                        if self.direction.x > 0:  # player is moving right
+                            self.hitbox.right = sprite.hitbox.left
+                        if self.direction.x < 0:  # player is moving left
+                            self.hitbox.left = sprite.hitbox.right
+                        self.rect.centerx = self.hitbox.centerx
+                        self.pos.x = self.hitbox.centerx
+                    if direction == 'vertical':
+                        if self.direction.y > 0:  # player is moving down
+                            self.hitbox.bottom = sprite.hitbox.top
+                        if self.direction.y < 0:  # player is moving up
+                            self.hitbox.top = sprite.hitbox.bottom
+                        self.rect.centery = self.hitbox.centery
+                        self.pos.y = self.hitbox.centery
+
     def move(self, dt):
         # normalize
         if self.direction.magnitude() > 0:
             self.direction = self.direction.normalize()
-        # horiz
+        # horizontal
         self.pos.x += self.direction.x * self.speed * dt
-        self.rect.centerx = self.pos.x
-        # vert
+        self.hitbox.centerx = round(self.pos.x)
+        self.rect.centerx = self.hitbox.centerx
+        self.collision('horizontal')
+        # vertical
         self.pos.y += self.direction.y * self.speed * dt
-        self.rect.centery = self.pos.y
-        # rect
+        self.hitbox.centery = round(self.pos.y)
+        self.rect.centery = self.hitbox.centery
+        self.collision('vertical')
 
     def update(self, dt):
         self.input()
