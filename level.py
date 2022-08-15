@@ -6,6 +6,7 @@ from sprites import Generic, Water, WildFlower, Tree
 from pytmx.util_pygame import load_pygame
 from support import import_folder
 
+
 class Level:
     def __init__(self):
         self.display_surface = pygame.display.get_surface()  # screen
@@ -40,7 +41,7 @@ class Level:
             Water(pos=(x * TILE_SIZE, y * TILE_SIZE), frames=import_folder('graphics/water'), groups=self.all_sprites)
         # trees
         for obj in tmx_data.get_layer_by_name('Trees'):
-            Tree((obj.x, obj.y), obj.image, [self.all_sprites, self.collision_sprites, self.tree_sprites], obj.name)
+            Tree((obj.x, obj.y), obj.image, [self.all_sprites, self.collision_sprites, self.tree_sprites], obj.name, self.player_add)
         # wildflowers
         for obj in tmx_data.get_layer_by_name('Decoration'):
             WildFlower((obj.x, obj.y), obj.image, [self.all_sprites, self.collision_sprites])
@@ -63,6 +64,9 @@ class Level:
         self.all_sprites.custom_draw(self.player)
         self.all_sprites.update(dt)
         self.overlay.display()
+
+    def player_add(self, item):
+        self.player.item_inventory[item] += 1
 
 
 class CameraGroup(pygame.sprite.Group):
