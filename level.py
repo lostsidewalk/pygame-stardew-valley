@@ -12,7 +12,7 @@ class Level:
         self.setup()
 
     def setup(self):
-        self.player = Player((320, 360), self.all_sprites) # move to __init__
+        self.player = Player((320, 360), self.all_sprites)  # move to __init__
 
     def run(self, dt):
         self.display_surface.fill('black')
