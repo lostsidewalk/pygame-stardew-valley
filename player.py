@@ -35,8 +35,13 @@ class Player(pygame.sprite.Sprite):
         # normalize
         if self.direction.magnitude() > 0:
             self.direction = self.direction.normalize()
-        self.pos += self.direction * self.speed * dt
-        self.rect.center = self.pos
+        # horiz
+        self.pos.x += self.direction.x * self.speed * dt
+        self.rect.centerx = self.pos.x
+        # vert
+        self.pos.y += self.direction.y * self.speed * dt
+        self.rect.centery = self.pos.y
+        # rect
 
     def update(self, dt):
         self.input()
