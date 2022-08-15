@@ -47,6 +47,7 @@ class Player(pygame.sprite.Sprite):
         # interaction attributes
         self.tree_sprites = tree_sprites
         self.interaction_sprites = interaction_sprites
+        self.sleep = False
 
     def use_tool(self):
         if self.selected_tool == 'hoe':
@@ -86,7 +87,7 @@ class Player(pygame.sprite.Sprite):
     def input(self):
         keys = pygame.key.get_pressed()
 
-        if not self.timers['tool-use'].active:  # disable input when tool is in use
+        if not self.timers['tool-use'].active and not self.sleep:  # disable input when tool in use or player sleeping
             # directions
             if keys[pygame.K_UP]:
                 self.direction.y = -1
@@ -142,6 +143,7 @@ class Player(pygame.sprite.Sprite):
                     pass
                 elif collided_interaction_sprite[0].name == 'Bed':
                     self.status = 'left_idle'
+                    self.sleep = True
                 else:
                     pass
 
