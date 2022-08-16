@@ -7,7 +7,7 @@ from pytmx.util_pygame import load_pygame
 from support import import_folder
 from transition import Transition
 from soil import SoilLayer
-from sky import Rain
+from sky import Rain, Sky
 from random import randint
 from sprites import Particle
 
@@ -35,6 +35,8 @@ class Level:
         self.rain = Rain(self.all_sprites)
         self.raining = randint(0, 10) > 3  # a lot of rain, ngl
         self.soil_layer.raining = self.raining
+
+        self.sky = Sky()
 
     def setup(self):
         tmx_data = load_pygame('data/map.tmx')
@@ -97,6 +99,8 @@ class Level:
         if self.raining:
             self.rain.update()
 
+        self.sky.display(dt)
+
         if self.player.sleep:
             self.transition.play()
 
@@ -117,6 +121,8 @@ class Level:
             for apple in tree.apple_sprites.sprites():
                 apple.kill()
             tree.create_fruit()
+
+        self.sky.start_color = [255, 255, 255]
 
     def harvest(self):
         if self.soil_layer.plant_sprites:
