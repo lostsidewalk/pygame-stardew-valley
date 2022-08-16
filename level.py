@@ -9,6 +9,7 @@ from transition import Transition
 from soil import SoilLayer
 from sky import Rain
 from random import randint
+from sprites import Particle
 
 
 class Level:
@@ -90,6 +91,7 @@ class Level:
         self.display_surface.fill('black')
         self.all_sprites.custom_draw(self.player)
         self.all_sprites.update(dt)
+        self.harvest()
         self.overlay.display()
 
         if self.raining:
@@ -115,6 +117,17 @@ class Level:
             for apple in tree.apple_sprites.sprites():
                 apple.kill()
             tree.create_fruit()
+
+    def harvest(self):
+        if self.soil_layer.plant_sprites:
+            for plant in self.soil_layer.plant_sprites.sprites():
+                if plant.harvestable and plant.rect.colliderect(self.player.hitbox):
+                    self.player_add(plant.plant_type)
+                    plant.kill()
+                    Particle(plant.rect.topleft, plant.image, self.all_sprites, z = LAYERS['main'])
+                    row = plant.rect.centery // TILE_SIZE
+                    col = plant.rect.centerx // TILE_SIZE
+                    self.soil_layer.grid[row][col].remove('P')
 
 
 class CameraGroup(pygame.sprite.Group):
