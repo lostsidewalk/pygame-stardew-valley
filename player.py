@@ -55,6 +55,9 @@ class Player(pygame.sprite.Sprite):
         self.sleep = False
         self.soil_layer = soil_layer
         self.toggle_shop = toggle_shop
+        # sound
+        self.watering = pygame.mixer.Sound('audio/water.mp3')
+        self.watering.set_volume(0.2)
 
     def use_tool(self):
         if self.selected_tool == 'hoe':
@@ -65,6 +68,7 @@ class Player(pygame.sprite.Sprite):
                     tree.damage()
         if self.selected_tool == 'water':
             self.soil_layer.water(self.target_pos)
+            self.watering.play()
 
     def get_target_pos(self):
         self.target_pos = self.rect.center + PLAYER_TOOL_OFFSETS[self.status.split('_')[0]]
@@ -145,7 +149,6 @@ class Player(pygame.sprite.Sprite):
                 self.selected_seed = self.seeds[self.seed_index]
 
         if keys[pygame.K_RETURN]:
-            self.toggle_shop()
             collided_interaction_sprite = pygame.sprite.spritecollide(sprite=self, group=self.interaction_sprites,
                                                                       dokill=False)
             if collided_interaction_sprite:

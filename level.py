@@ -16,31 +16,25 @@ from menu import Menu
 class Level:
     def __init__(self):
         self.display_surface = pygame.display.get_surface()  # screen
-
         self.all_sprites = CameraGroup()  # sprite groups
-
         self.collision_sprites = pygame.sprite.Group()  # contains all 'collidable' sprites
-
         self.interaction_sprites = pygame.sprite.Group()  # contains all 'interactable' sprites
-
         self.tree_sprites = pygame.sprite.Group()  # contains all trees
-
         self.soil_layer = SoilLayer(self.all_sprites, self.collision_sprites)
-
         self.setup()
-
         self.overlay = Overlay(self.player)
-
         self.transition = Transition(self.reset, self.player)
-
         self.rain = Rain(self.all_sprites)
         self.raining = randint(0, 10) > 3  # a lot of rain, ngl
         self.soil_layer.raining = self.raining
-
         self.sky = Sky()
-
         self.shop_active = False
         self.menu = Menu(self.player, self.toggle_shop)
+        self.success = pygame.mixer.Sound('audio/success.wav')
+        self.success.set_volume(0.3)
+        self.bg_music = pygame.mixer.Sound('audio/bg.mp3')
+        self.bg_music.set_volume(0.3)
+        self.bg_music.play(loops=-1)
 
     def setup(self):
         tmx_data = load_pygame('data/map.tmx')
@@ -123,6 +117,7 @@ class Level:
 
     def player_add(self, item):
         self.player.item_inventory[item] += 1
+        self.success.play()
 
     def toggle_shop(self):
         self.shop_active = not self.shop_active
