@@ -145,7 +145,7 @@ class Level:
                 if plant.harvestable and plant.rect.colliderect(self.player.hitbox):
                     self.player_add(plant.plant_type)
                     plant.kill()
-                    Particle(plant.rect.topleft, plant.image, self.all_sprites, z = LAYERS['main'])
+                    Particle(plant.rect.topleft, plant.image, self.all_sprites, z=LAYERS['main'])
                     row = plant.rect.centery // TILE_SIZE
                     col = plant.rect.centerx // TILE_SIZE
                     self.soil_layer.grid[row][col].remove('P')

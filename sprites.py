@@ -98,7 +98,7 @@ class Tree(Generic):
             Particle(pos=self.rect.topleft, surface=self.image, groups=self.groups()[0], z=LAYERS['fruit'],
                      duration=300)
             self.image = self.stump_surface
-            self.rect = self.image.get_rect(midbottom = self.rect.midbottom)
+            self.rect = self.image.get_rect(midbottom=self.rect.midbottom)
             self.hitbox = self.rect.copy().inflate((-10, -self.rect.height * 0.6))
             self.alive = False
             self.player_add('wood')

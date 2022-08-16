@@ -59,7 +59,7 @@ class SoilLayer:
     def __init__(self, all_sprites, collision_sprites):
         # sprite groups
         self.all_sprites = all_sprites
-        self.collision_sprites = collision_sprites;
+        self.collision_sprites = collision_sprites
         self.soil_sprites = pygame.sprite.Group()
         self.water_sprites = pygame.sprite.Group()
         self.plant_sprites = pygame.sprite.Group()
@@ -154,7 +154,8 @@ class SoilLayer:
                 y = soil_sprite.rect.y // TILE_SIZE
                 if 'P' not in self.grid[y][x]:
                     self.grid[y][x].append('P')
-                    Plant(plant_type=seed, groups=[self.all_sprites, self.plant_sprites, self.collision_sprites], soil=soil_sprite,
+                    Plant(plant_type=seed, groups=[self.all_sprites, self.plant_sprites, self.collision_sprites],
+                          soil=soil_sprite,
                           check_watered=self.check_watered)
 
     def update_plants(self):
