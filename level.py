@@ -23,7 +23,7 @@ class Level:
 
         self.tree_sprites = pygame.sprite.Group()  # contains all trees
 
-        self.soil_layer = SoilLayer(self.all_sprites)
+        self.soil_layer = SoilLayer(self.all_sprites, self.collision_sprites)
 
         self.setup()
 
@@ -102,12 +102,15 @@ class Level:
         self.player.item_inventory[item] += 1
 
     def reset(self):
+        # plants
+        self.soil_layer.update_plants()
+        # soil
         self.soil_layer.remove_water()
         self.raining = randint(0, 10) > 3
         self.soil_layer.raining = self.raining
         if self.raining:
             self.soil_layer.water_all()
-
+        # trees
         for tree in self.tree_sprites.sprites():
             for apple in tree.apple_sprites.sprites():
                 apple.kill()
