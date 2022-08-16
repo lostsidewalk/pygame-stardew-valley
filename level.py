@@ -29,7 +29,6 @@ class Level:
 
         self.transition = Transition(self.reset, self.player)
 
-
     def setup(self):
         tmx_data = load_pygame('data/map.tmx')
 
@@ -94,6 +93,8 @@ class Level:
         self.player.item_inventory[item] += 1
 
     def reset(self):
+        self.soil_layer.remove_water()
+
         for tree in self.tree_sprites.sprites():
             for apple in tree.apple_sprites.sprites():
                 apple.kill()
