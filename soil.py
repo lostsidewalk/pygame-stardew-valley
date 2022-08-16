@@ -64,6 +64,8 @@ class SoilLayer:
                 if 'F' in self.grid[y][x]:
                     self.grid[y][x].append('X')
                     self.create_soil_tiles()
+                    if self.raining:
+                        self.water_all()
 
     def water(self, pos):
         for soil_sprite in self.soil_sprites.sprites():
@@ -76,6 +78,19 @@ class SoilLayer:
                     pos=soil_sprite.rect.topleft,
                     surface=choice(self.water_surfaces),
                     groups=[self.all_sprites, self.water_sprites])
+
+    def water_all(self):
+        for index_row, row in enumerate(self.grid):
+            for index_col, cell in enumerate(row):
+                if 'X' in cell and 'W' not in cell:
+                    x = index_col * TILE_SIZE
+                    y = index_row * TILE_SIZE
+                    cell.append('W')
+
+                    WaterTile(
+                        pos=(x, y),
+                        surface=choice(self.water_surfaces),
+                        groups=[self.all_sprites, self.water_sprites])
 
     def remove_water(self):
         for sprite in self.water_sprites.sprites():
