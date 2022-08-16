@@ -10,6 +10,7 @@ from soil import SoilLayer
 from sky import Rain, Sky
 from random import randint
 from sprites import Particle
+from menu import Menu
 
 
 class Level:
@@ -37,6 +38,9 @@ class Level:
         self.soil_layer.raining = self.raining
 
         self.sky = Sky()
+
+        self.shop_active = False
+        self.menu = Menu(self.player, self.toggle_shop)
 
     def setup(self):
         tmx_data = load_pygame('data/map.tmx')
@@ -74,8 +78,16 @@ class Level:
                     collision_sprites=self.collision_sprites,
                     tree_sprites=self.tree_sprites,
                     interaction_sprites=self.interaction_sprites,
-                    soil_layer=self.soil_layer)
+                    soil_layer=self.soil_layer,
+                    toggle_shop=self.toggle_shop)
             elif obj.name == 'Bed':
+                Interaction(
+                    pos=(obj.x, obj.y),
+                    size=(obj.width, obj.height),
+                    groups=self.interaction_sprites,
+                    name=obj.name
+                )
+            elif obj.name == 'Trader':
                 Interaction(
                     pos=(obj.x, obj.y),
                     size=(obj.width, obj.height),
@@ -92,11 +104,16 @@ class Level:
     def run(self, dt):
         self.display_surface.fill('black')
         self.all_sprites.custom_draw(self.player)
-        self.all_sprites.update(dt)
-        self.harvest()
+
+        if self.shop_active:
+            self.menu.update()
+        else:
+            self.all_sprites.update(dt)
+            self.harvest()
+
         self.overlay.display()
 
-        if self.raining:
+        if self.raining and not self.shop_active:
             self.rain.update()
 
         self.sky.display(dt)
@@ -106,6 +123,9 @@ class Level:
 
     def player_add(self, item):
         self.player.item_inventory[item] += 1
+
+    def toggle_shop(self):
+        self.shop_active = not self.shop_active
 
     def reset(self):
         # plants
